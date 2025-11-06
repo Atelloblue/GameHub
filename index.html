@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Hub - Play Free Online Games</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-attachment: fixed;
+            color: #fff;
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 30px 0;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-bottom: 3px solid #ff5722;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(to right, #ff8a00, #e52e71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #search-input:focus {
+            outline: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .game-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-icon {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .game-info {
+            padding: 20px;
+        }
+
+        .game-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .game-description {
+            color: #ddd;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .play-button {
+            display: inline-block;
+            background: linear-gradient(to right, #ff8a00, #e52e71);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .play-button:hover {
+            background: linear-gradient(to right, #e52e71, #ff8a00);
+            box-shadow: 0 5px 15px rgba(229, 46, 113, 0.4);
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 1.5rem;
+            margin: 50px 0;
+        }
+
+        .no-results {
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 50px 0;
+            grid-column: 1 / -1;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #ddd;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Game Hub</h1>
+            <p class="tagline">Your ultimate destination for free online games</p>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search for games...">
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="games-container" class="games-grid">
+            <div class="loading">Loading games...</div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Game Hub. All games are property of their respective owners.</p>
+        </div>
+    </footer>
+
+    <script>
+        // This would normally be in a separate games.json file
+        // For demonstration, we'll include it here
+        const gamesData = {
+            "games": [
+                {
+                    "title": "Space Invaders",
+                    "description": "Classic arcade game where you defend Earth from alien invaders. Shoot down the descending aliens before they reach the bottom of the screen.",
+                    "url": "https://example.com/space-invaders",
+                    "icon": "https://images.unsplash.com/photo-1615252587303-c0df4686d024?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+                },
+                {
+                    "title": "Puzzle Adventure",
+                    "description": "Solve challenging puzzles across multiple levels in this exciting adventure game. Test your logic and problem-solving skills.",
+                    "url": "https://example.com/puzzle-adventure",
+                    "icon": "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+                },
+                {
+                    "title": "Racing Extreme",
+                    "description": "High-speed racing game with realistic physics and multiple tracks. Compete against AI or friends in this adrenaline-pumping experience.",
+                    "url": "https://example.com/racing-extreme",
+                    "icon": "https://images.unsplash.com/photo-1553440569-bcc63803a83d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+                },
+                {
+                    "title": "Zombie Survival",
+                    "description": "Fight off hordes of zombies in this action-packed survival game. Gather resources, build defenses, and survive as long as you can.",
+                    "url": "https://example.com/zombie-survival",
+                    "icon": "https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+                },
+                {
+                    "title": "Fantasy Quest",
+                    "description": "Embark on an epic journey in this fantasy RPG. Explore vast worlds, battle monsters, and complete quests to become a legendary hero.",
+                    "url": "https://example.com/fantasy-quest",
+                    "icon": "https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+                },
+                {
+                    "title": "Sports Challenge",
+                    "description": "Compete in multiple sports including basketball, soccer, and tennis. Challenge your friends and climb the global leaderboards.",
+                    "url": "https://example.com/sports-challenge",
+                    "icon": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+                }
+            ]
+        };
+
+        // Function to display games
+        function displayGames(games) {
+            const gamesContainer = document.getElementById('games-container');
+            
+            if (games.length === 0) {
+                gamesContainer.innerHTML = '<div class="no-results">No games found matching your search.</div>';
+                return;
+            }
+            
+            gamesContainer.innerHTML = '';
+            
+            games.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                
+                gameCard.innerHTML = `
+                    <img src="${game.icon}" alt="${game.title}" class="game-icon">
+                    <div class="game-info">
+                        <h3 class="game-title">${game.title}</h3>
+                        <p class="game-description">${game.description}</p>
+                        <a href="${game.url}" target="_blank" class="play-button">Play Now</a>
+                    </div>
+                `;
+                
+                gamesContainer.appendChild(gameCard);
+            });
+        }
+
+        // Function to filter games based on search
+        function filterGames(searchTerm) {
+            const filteredGames = gamesData.games.filter(game => 
+                game.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                game.description.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            
+            displayGames(filteredGames);
+        }
+
+        // Event listener for search input
+        document.getElementById('search-input').addEventListener('input', function(e) {
+            filterGames(e.target.value);
+        });
+
+        // Initial display of all games
+        displayGames(gamesData.games);
+    </script>
+</body>
+</html>
