@@ -148,6 +148,14 @@
             grid-column: 1 / -1;
         }
 
+        .error {
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 50px 0;
+            color: #ff6b6b;
+            grid-column: 1 / -1;
+        }
+
         footer {
             text-align: center;
             margin-top: 50px;
@@ -202,49 +210,6 @@
     </footer>
 
     <script>
-        // This would normally be in a separate games.json file
-        // For demonstration, we'll include it here
-        const gamesData = {
-            "games": [
-                {
-                    "title": "Space Invaders",
-                    "description": "Classic arcade game where you defend Earth from alien invaders. Shoot down the descending aliens before they reach the bottom of the screen.",
-                    "url": "https://example.com/space-invaders",
-                    "icon": "https://images.unsplash.com/photo-1615252587303-c0df4686d024?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-                },
-                {
-                    "title": "Puzzle Adventure",
-                    "description": "Solve challenging puzzles across multiple levels in this exciting adventure game. Test your logic and problem-solving skills.",
-                    "url": "https://example.com/puzzle-adventure",
-                    "icon": "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-                },
-                {
-                    "title": "Racing Extreme",
-                    "description": "High-speed racing game with realistic physics and multiple tracks. Compete against AI or friends in this adrenaline-pumping experience.",
-                    "url": "https://example.com/racing-extreme",
-                    "icon": "https://images.unsplash.com/photo-1553440569-bcc63803a83d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-                },
-                {
-                    "title": "Zombie Survival",
-                    "description": "Fight off hordes of zombies in this action-packed survival game. Gather resources, build defenses, and survive as long as you can.",
-                    "url": "https://example.com/zombie-survival",
-                    "icon": "https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-                },
-                {
-                    "title": "Fantasy Quest",
-                    "description": "Embark on an epic journey in this fantasy RPG. Explore vast worlds, battle monsters, and complete quests to become a legendary hero.",
-                    "url": "https://example.com/fantasy-quest",
-                    "icon": "https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-                },
-                {
-                    "title": "Sports Challenge",
-                    "description": "Compete in multiple sports including basketball, soccer, and tennis. Challenge your friends and climb the global leaderboards.",
-                    "url": "https://example.com/sports-challenge",
-                    "icon": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-                }
-            ]
-        };
-
         // Function to display games
         function displayGames(games) {
             const gamesContainer = document.getElementById('games-container');
@@ -274,22 +239,39 @@
         }
 
         // Function to filter games based on search
-        function filterGames(searchTerm) {
-            const filteredGames = gamesData.games.filter(game => 
+        function filterGames(games, searchTerm) {
+            return games.filter(game => 
                 game.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 game.description.toLowerCase().includes(searchTerm.toLowerCase())
             );
-            
-            displayGames(filteredGames);
         }
 
-        // Event listener for search input
-        document.getElementById('search-input').addEventListener('input', function(e) {
-            filterGames(e.target.value);
-        });
+        // Load games from external JSON file
+        async function loadGames() {
+            try {
+                const response = await fetch('games.json');
+                if (!response.ok) {
+                    throw new Error('Failed to load games');
+                }
+                const data = await response.json();
+                
+                // Initial display of all games
+                displayGames(data.games);
+                
+                // Event listener for search input
+                document.getElementById('search-input').addEventListener('input', function(e) {
+                    const filteredGames = filterGames(data.games, e.target.value);
+                    displayGames(filteredGames);
+                });
+            } catch (error) {
+                console.error('Error loading games:', error);
+                document.getElementById('games-container').innerHTML = 
+                    '<div class="error">Error loading games. Please check if games.json exists.</div>';
+            }
+        }
 
-        // Initial display of all games
-        displayGames(gamesData.games);
+        // Initialize the page
+        loadGames();
     </script>
 </body>
 </html>
