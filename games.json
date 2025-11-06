@@ -1,0 +1,16 @@
+{
+  "games": [
+    {
+      "title": "Space Invaders",
+      "description": "Classic arcade game where you defend Earth from alien invaders.",
+      "url": "https://example.com/space-invaders",
+      "icon": "path/to/space-invaders-icon.jpg"
+    },
+    {
+      "title": "Puzzle Adventure",
+      "description": "Solve challenging puzzles across multiple levels.",
+      "url": "https://example.com/puzzle-adventure",
+      "icon": "path/to/puzzle-adventure-icon.jpg"
+    }
+  ]
+}
